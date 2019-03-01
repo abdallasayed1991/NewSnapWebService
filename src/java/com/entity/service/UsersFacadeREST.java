@@ -6,6 +6,7 @@
 package com.entity.service;
 
 import com.entity.Users;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -97,6 +98,40 @@ public class UsersFacadeREST extends AbstractFacade<Users> {
         for(Users u: findAll())
         {
             if (u.getUserEmail().equals(User_email)&&u.getUserPassword().equals(User_Password)) {
+                user = u;
+                break;
+            }
+        }
+        return user;
+    }
+   
+    @GET
+    @Path("getTopRequest")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Users> getTopRequest()
+    {
+        List<Users> topUsers = new ArrayList();
+        for(Users u: findAll())
+        {
+            if (u.getUserState() == 0) {
+                topUsers.add(u);
+                if(topUsers.size()==5)
+                    break;
+            }
+        }
+        return topUsers;
+    }
+    
+    
+    @GET
+    @Path("findUserByID")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Users findUserByID(@QueryParam("User_ID") int User_ID)
+    {
+        Users user = null;
+        for(Users u: findAll())
+        {
+            if (u.getUserID() == User_ID) {
                 user = u;
                 break;
             }

@@ -6,6 +6,7 @@
 package com.entity.service;
 
 import com.entity.Product;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -18,6 +19,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -85,5 +88,55 @@ public class ProductFacadeREST extends AbstractFacade<Product> {
     protected EntityManager getEntityManager() {
         return em;
     }
+    
+    @GET
+    @Path("getTopRequest")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Product> getTopRequest()
+    {
+        List<Product> topUsers = new ArrayList();
+        for(Product p: findAll())
+        {
+            if (p.getProductState()== 0) {
+                topUsers.add(p);
+                if(topUsers.size()==5)
+                    break;
+            }
+        }
+        return topUsers;
+    }
+    
+    @GET
+    @Path("getAllRequest")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Product> getAllRequest()
+    {
+        List<Product> topUsers = new ArrayList();
+        for(Product p: findAll())
+        {
+            if (p.getProductState()== 0) {
+                topUsers.add(p);
+            }
+        }
+        return topUsers;
+    }
+    
+    @GET
+    @Path("findProductByID")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Product findProductByID(@QueryParam("Product_ID") int Product_ID)
+    {
+        Product product = null;
+        for(Product p: findAll())
+        {
+            if (p.getProductID()== Product_ID) {
+                product = p;
+                break;
+            }
+        }
+        return product;
+    }
+    
+    
     
 }
